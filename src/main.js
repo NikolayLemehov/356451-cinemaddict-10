@@ -1,5 +1,3 @@
-'use strict';
-
 const CardCount = {
   USUAL: 5,
   RATED: 2,
