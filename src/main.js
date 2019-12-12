@@ -13,9 +13,6 @@ const CardCount = {
   RATED: 2,
   COMMENTED: 2,
 };
-const films = generateFilms(CardCount.LOADED);
-let showedCardCount = CardCount.START;
-films.forEach((film) => console.log(film.genre));
 
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
@@ -28,6 +25,8 @@ const mainElement = document.querySelector(`.main`);
 render(mainElement, createMainNavTemplate());
 render(mainElement, createFilmsSectionTemplate());
 
+const films = generateFilms(CardCount.LOADED);
+let showedCardCount = CardCount.START;
 
 const filmsContainerElement = mainElement.querySelector(`.films-list .films-list__container`);
 films.slice(0, showedCardCount).forEach((film) => render(filmsContainerElement, createFilmCardTemplate(film)));
