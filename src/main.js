@@ -5,10 +5,11 @@ import {createShowMoreBtnTemplate} from "./components/show-more-btn";
 import {createProfileTemplate} from "./components/profile";
 import {createFilmsSectionTemplate} from "./components/films-section";
 import {generateFilms} from "./mock/films";
+import {getRankFromWatchedMovie} from "./mock/rank-user";
 
 const CardCount = {
   LOADED: 24,
-  START: 25,
+  START: 5,
   STEP: 5,
   RATED: 2,
   COMMENTED: 2,
@@ -19,7 +20,8 @@ const render = (container, template, place = `beforeend`) => {
 };
 
 const headerElement = document.querySelector(`.header`);
-render(headerElement, createProfileTemplate());
+const rank = getRankFromWatchedMovie();
+render(headerElement, createProfileTemplate(rank));
 
 const mainElement = document.querySelector(`.main`);
 render(mainElement, createMainNavTemplate());

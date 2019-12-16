@@ -1,6 +1,8 @@
 import {URL_FILM_TO_NAME as FILM_MAP} from "../const";
+import {getRandomIntegerNumber} from "../utils";
 
 const POSTER_URL_PREFIX = `./images/posters/`;
+const GRADE = 10;
 const phrases = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
@@ -34,7 +36,6 @@ const CommentCount = {
   MIN: 0,
   MAX: 200,
 };
-const GRADE = 10;
 
 const shuffle = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -44,7 +45,6 @@ const shuffle = (array) => {
   return array;
 };
 
-const getRandomIntegerNumber = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
 const getRandomNumber = (min, max) => Math.floor(min * GRADE + Math.random() * (max * GRADE + 1 - min * GRADE)) / GRADE;
 const getRandomArrayItem = (array) => array[getRandomIntegerNumber(0, array.length - 1)];
 

@@ -9,4 +9,6 @@ const formatTime = (date) => {
   return hours === 0 ? `${minutes}m` : `${hours}h ${minutes}m`;
 };
 
-export {formatTime};
+const getRandomIntegerNumber = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
+
+export {formatTime, getRandomIntegerNumber};
