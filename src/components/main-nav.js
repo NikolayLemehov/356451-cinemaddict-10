@@ -1,11 +1,20 @@
-export const createMainNavTemplate = () => {
+const createItemMenuTemplate = (itemMenu) => {
+  const {url, text, isActive, isCounted, count, isAdditional} = itemMenu;
+  const activity = isActive ? `main-navigation__item--active` : ``;
+  const enumeration = isCounted ? ` <span class="main-navigation__item-count">${count}</span>` : ``;
+  const addition = isAdditional ? `main-navigation__item--additional` : ``;
+
+  return (
+    `<a href="#${url}" class="main-navigation__item ${activity} ${addition}">${text}${enumeration}</a>`
+  );
+};
+
+export const createMainNavTemplate = (mainNav) => {
+  const menuItemsElement = mainNav.map((item) => createItemMenuTemplate(item)).join(``);
+
   return (
     `<nav class="main-navigation">
-      <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-      <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-      <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-      <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
-      <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
+      ${menuItemsElement}
     </nav>`
   );
 };

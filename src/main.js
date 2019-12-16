@@ -5,6 +5,7 @@ import {createShowMoreBtnTemplate} from "./components/show-more-btn";
 import {createProfileTemplate} from "./components/profile";
 import {createFilmsSectionTemplate} from "./components/films-section";
 import {generateFilms} from "./mock/films";
+import {mainNav} from "./mock/main-nav";
 import {getRankFromWatchedMovie} from "./mock/rank-user";
 
 const CardCount = {
@@ -24,7 +25,7 @@ const rank = getRankFromWatchedMovie();
 render(headerElement, createProfileTemplate(rank));
 
 const mainElement = document.querySelector(`.main`);
-render(mainElement, createMainNavTemplate());
+render(mainElement, createMainNavTemplate(mainNav));
 render(mainElement, createFilmsSectionTemplate());
 
 const films = generateFilms(CardCount.LOADED);
