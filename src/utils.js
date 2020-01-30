@@ -10,5 +10,6 @@ const formatTime = (date) => {
 };
 
 const getRandomIntegerNumber = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
+const getRandomArrayItem = (array) => array[getRandomIntegerNumber(0, array.length - 1)];
 
-export {formatTime, getRandomIntegerNumber};
+export {formatTime, getRandomIntegerNumber, getRandomArrayItem};

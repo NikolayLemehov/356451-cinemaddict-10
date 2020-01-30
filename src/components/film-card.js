@@ -1,7 +1,7 @@
 import {formatTime} from "../utils";
 
 const createFilmCardTemplate = (film) => {
-  const {name, url, destination, year, rate, genre, duration, commentCount} = film;
+  const {name, url, description, year, rate, genre, duration, commentCount} = film;
   const formattedDuration = formatTime(duration);
 
   return (
@@ -14,7 +14,7 @@ const createFilmCardTemplate = (film) => {
         <span class="film-card__genre">${genre}</span>
       </p>
       <img src="${url}" alt="The poster of the film '${name}'" class="film-card__poster">
-      <p class="film-card__description">${destination}</p>
+      <p class="film-card__description">${description}</p>
       <a class="film-card__comments">${commentCount} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>

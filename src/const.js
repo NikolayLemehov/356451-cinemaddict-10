@@ -1,3 +1,5 @@
+import {getRandomArrayItem} from "./utils";
+
 const URL_FILM_TO_NAME = new Map([
   [`made-for-each-other.png`, `Made for Each Other`],
   [`popeye-meets-sindbad.png`, `Popeye the Sailor Meets Sindbad the Sailor`],
@@ -28,5 +30,14 @@ const URL_FILM_TO_NAME = new Map([
   [`edge-of-tomorrow.jpg`, `Edge of Tomorrow`],
   [`groundhog-day.jpg`, `Groundhog Day`],
 ]);
+const girlNames = [`Olivia`, `Amelia`, `Jessica`, `Ava`, `Sophia`, `Grace`, `Mia`, `Poppy`, `Ella`, `Lily`, `Ivy`, `Freya`];
+const boyNames = [`Harry`, `Charlie`, `George`, `Jack`, `Leo`, `Jacob`, `Freddie`, `Oscar`, `Arthur`, `Logan`, `Joshua`, `Max`];
+const lastNames = [`Smith`, `Johnson`, `Williams`, `Brown`, `Davis`, `Miller`, `Moore`, `Taylor`, `Thomas`, `White`, `Martin`];
+const createName = () => {
+  return Math.random() < 0.5 ? getRandomArrayItem(girlNames) : getRandomArrayItem(boyNames);
+};
+const createFullName = () => {
+  return `${createName()} ${getRandomArrayItem(lastNames)}`;
+};
 
-export {URL_FILM_TO_NAME};
+export {URL_FILM_TO_NAME, createFullName};

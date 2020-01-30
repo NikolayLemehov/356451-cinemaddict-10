@@ -1,5 +1,5 @@
 import {URL_FILM_TO_NAME as FILM_MAP} from "../const";
-import {getRandomIntegerNumber} from "../utils";
+import {getRandomIntegerNumber, getRandomArrayItem} from "../utils";
 
 const POSTER_URL_PREFIX = `./images/posters/`;
 const GRADE = 10;
@@ -46,13 +46,12 @@ const shuffle = (array) => {
 };
 
 const getRandomNumber = (min, max) => Math.floor(min * GRADE + Math.random() * (max * GRADE + 1 - min * GRADE)) / GRADE;
-const getRandomArrayItem = (array) => array[getRandomIntegerNumber(0, array.length - 1)];
 
 const generateFilm = (fileName) => {
   return {
     name: FILM_MAP.get(fileName),
     url: `${POSTER_URL_PREFIX}${fileName}`,
-    destination: shuffle(phrases.slice()).slice(0, getRandomIntegerNumber(PhraseCount.MIN, PhraseCount.MAX)).join(` `),
+    description: shuffle(phrases.slice()).slice(0, getRandomIntegerNumber(PhraseCount.MIN, PhraseCount.MAX)).join(` `),
     year: getRandomIntegerNumber(Year.MIN, Year.MAX),
     rate: getRandomNumber(Rate.MIN, Rate.MAX),
     genre: getRandomArrayItem(genres),
