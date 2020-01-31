@@ -1,12 +1,8 @@
-const castTimeFormat = (value) => {
-  return value < 10 ? `0${value}` : String(value);
-};
+import moment from 'moment';
 
-const formatTime = (date) => {
-  const hours = date.getHours();
-  const minutes = castTimeFormat(date.getMinutes());
-
-  return hours === 0 ? `${minutes}m` : `${hours}h ${minutes}m`;
+const formatTime = (minutes) => {
+  const m = moment.duration(minutes, `m`);
+  return `${m.hours() > 0 ? `${m.hours()}h ${m.minutes()}m` : `${m.minutes()}m`}`;
 };
 
 const getRandomIntegerNumber = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));

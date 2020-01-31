@@ -1,3 +1,5 @@
+import AbstractSmartComponent from './abstract-smart-component';
+
 const createItemMenuTemplate = (itemMenu) => {
   const {url, text, isActive, isCounted, count, isAdditional} = itemMenu;
   const activity = isActive ? `main-navigation__item--active` : ``;
@@ -9,7 +11,7 @@ const createItemMenuTemplate = (itemMenu) => {
   );
 };
 
-export const createMainNavTemplate = (mainNav) => {
+const createMainNavTemplate = (mainNav) => {
   const menuItemsElement = mainNav.map((item) => createItemMenuTemplate(item)).join(``);
 
   return (
@@ -18,3 +20,15 @@ export const createMainNavTemplate = (mainNav) => {
     </nav>`
   );
 };
+
+
+export default class MainNavigationComponent extends AbstractSmartComponent {
+  constructor(mainNav) {
+    super();
+    this._mainNav = mainNav;
+  }
+
+  getTemplate() {
+    return createMainNavTemplate(this._mainNav);
+  }
+}
