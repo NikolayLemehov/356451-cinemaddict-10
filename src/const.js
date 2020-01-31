@@ -1,4 +1,4 @@
-import {getRandomArrayItem} from "./utils";
+import {getRandomArrayItem} from "./utils/utils";
 
 const URL_FILM_TO_NAME = new Map([
   [`made-for-each-other.png`, `Made for Each Other`],

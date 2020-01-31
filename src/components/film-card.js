@@ -1,5 +1,5 @@
 import AbstractSmartComponent from './abstract-smart-component';
-import {formatTime} from '../utils';
+import {formatTime} from '../utils/utils';
 
 const createFilmCardTemplate = (film) => {
   const {filmInfo, comments} = film;

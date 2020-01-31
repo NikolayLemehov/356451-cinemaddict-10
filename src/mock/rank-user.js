@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber} from "../utils";
+import {getRandomIntegerNumber} from "../utils/utils";
 
 const WatchedMovie = {
   MIN: 0,
