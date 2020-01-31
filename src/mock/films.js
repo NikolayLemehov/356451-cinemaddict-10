@@ -1,5 +1,5 @@
 import {URL_FILM_TO_NAME as FILM_MAP} from "../const";
-import {getRandomIntegerNumber, getRandomArrayItem} from "../utils/utils";
+import {getRandomIntegerNumber, getRandomArrayItem} from "../utils/common";
 
 const POSTER_URL_PREFIX = `./images/posters/`;
 const GRADE = 10;

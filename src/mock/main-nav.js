@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber} from "../utils/utils";
+import {getRandomIntegerNumber} from "../utils/common";
 
 const MovieCount = {
   MIN: 5,
