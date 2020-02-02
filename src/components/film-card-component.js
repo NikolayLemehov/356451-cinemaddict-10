@@ -2,10 +2,11 @@ import AbstractSmartComponent from './abstract-smart-component';
 import {formatTime} from '../utils/common';
 
 const createFilmCardTemplate = (film) => {
-  const {filmInfo, comments} = film;
-  const {title, totalRating, poster, release, runtime, genre, description} = filmInfo;
+  const {filmInfo, userDetails, comments} = film;
+  const {title, totalRating, poster, release, runtime, genres, description} = filmInfo;
+  const {hasWatchlist, isWatched, isFavorite} = userDetails;
   const formattedRuntime = formatTime(runtime);
-  const genreText = genre.join(`, `);
+  const genreText = genres.join(`, `);
 
   return (
     `<article class="film-card">
@@ -20,9 +21,12 @@ const createFilmCardTemplate = (film) => {
       <p class="film-card__description">${description}</p>
       <a class="film-card__comments">${comments.length} comments</a>
       <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist
+          ${hasWatchlist ? ` film-card__controls-item--active` : ``}">Add to watchlist</button>
+        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched
+          ${isWatched ? ` film-card__controls-item--active` : ``}">Mark as watched</button>
+        <button class="film-card__controls-item button film-card__controls-item--favorite
+          ${isFavorite ? ` film-card__controls-item--active` : ``}">Mark as favorite</button>
       </form>
     </article>`
   );

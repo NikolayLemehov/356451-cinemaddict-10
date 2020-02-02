@@ -3,7 +3,7 @@ export default class FilmAdapterModel {
     this.id = endData[`id`];
     this.filmInfo = {
       title: endData[`film_info`][`title`],
-      alternativeTitle: endData[`film_info`][`alternative_title`],
+      originalTitle: endData[`film_info`][`alternative_title`],
       totalRating: endData[`film_info`][`total_rating`],
       poster: endData[`film_info`][`poster`],
       ageRating: endData[`film_info`][`age_rating`],
@@ -15,15 +15,15 @@ export default class FilmAdapterModel {
         country: endData[`film_info`][`release`][`release_country`],
       },
       runtime: endData[`film_info`][`runtime`],
-      genre: endData[`film_info`][`genre`],
+      genres: endData[`film_info`][`genre`],
       description: endData[`film_info`][`description`],
     };
     this.userDetails = {
-      personalRating: endData[`user_details`][`personal_rating`],
-      watchlist: endData[`user_details`][`watchlist`],
-      alreadyWatched: endData[`user_details`][`already_watched`],
+      personalRating: endData[`user_details`][`already_watched`] ? endData[`user_details`][`personal_rating`] : null,
+      hasWatchlist: endData[`user_details`][`watchlist`],
+      isWatched: endData[`user_details`][`already_watched`],
       watchingDate: endData[`user_details`][`watching_date`],
-      favorite: endData[`user_details`][`favorite`],
+      isFavorite: endData[`user_details`][`favorite`],
     };
     this.comments = endData[`comments`];
   }

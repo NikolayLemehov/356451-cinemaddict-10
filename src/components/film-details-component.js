@@ -1,6 +1,26 @@
+import moment from 'moment';
 import AbstractSmartComponent from './abstract-smart-component';
+import {formatTime} from '../utils/common';
 
-const createFilmDetailsTemplate = () => {
+const personalRatings = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const createUserRatingInput = (value, personalRating) => {
+  return (
+    `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden"
+      value="${value}" id="rating-${value}" ${personalRating === value ? `checked` : ``}>
+    <label class="film-details__user-rating-label" for="rating-${value}">${value}</label>`
+  );
+};
+
+const createFilmDetailsTemplate = (film) => {
+  const {filmInfo, userDetails} = film;
+  const {title, originalTitle, totalRating, poster, ageRating, director, writers, actors,
+    release, runtime, genres, description} = filmInfo;
+  const {personalRating, hasWatchlist, isWatched, isFavorite} = userDetails;
+  const releaseDate = moment(release.date).format(`DD MMMM YYYY`);
+  const runtimeText = formatTime(runtime);
+  const genresList = genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join(``);
+  const personalRatingsList = personalRatings.map((it) => createUserRatingInput(it, personalRating)).join(``);
+  // 30 March 1945
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -10,72 +30,74 @@ const createFilmDetailsTemplate = () => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/the-great-flamarion.jpg" alt="">
+              <img class="film-details__poster-img" src="${poster}" alt="${title}">
     
-              <p class="film-details__age">18+</p>
+              <p class="film-details__age">${ageRating}+</p>
             </div>
     
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
-                  <h3 class="film-details__title">The Great Flamarion</h3>
-                  <p class="film-details__title-original">Original: The Great Flamarion</p>
+                  <h3 class="film-details__title">${title}</h3>
+                  <p class="film-details__title-original">Original: ${originalTitle}</p>
                 </div>
     
                 <div class="film-details__rating">
-                  <p class="film-details__total-rating">8.9</p>
-                  <p class="film-details__user-rating">Your rate 9</p>
+                  <p class="film-details__total-rating">${totalRating}</p>
+                  <p class="film-details__user-rating">Your rate ${personalRating}</p>
                 </div>
               </div>
     
               <table class="film-details__table">
                 <tr class="film-details__row">
                   <td class="film-details__term">Director</td>
-                  <td class="film-details__cell">Anthony Mann</td>
+                  <td class="film-details__cell">${director}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+                  <td class="film-details__cell">${writers.join(`, `)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+                  <td class="film-details__cell">${actors.join(`, `)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">30 March 1945</td>
+                  <td class="film-details__cell">${releaseDate}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">1h 18m</td>
+                  <td class="film-details__cell">${runtimeText}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
-                  <td class="film-details__cell">USA</td>
+                  <td class="film-details__cell">${release.country}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
                   <td class="film-details__cell">
-                    <span class="film-details__genre">Drama</span>
-                    <span class="film-details__genre">Film-Noir</span>
-                    <span class="film-details__genre">Mystery</span></td>
+                    ${genresList}
+                  </td>
                 </tr>
               </table>
     
               <p class="film-details__film-description">
-                The film opens following a murder at a cabaret in Mexico City in 1936, and then presents the events leading up to it in flashback. The Great Flamarion (Erich von Stroheim) is an arrogant, friendless, and misogynous marksman who displays his trick gunshot act in the vaudeville circuit. His show features a beautiful assistant, Connie (Mary Beth Hughes) and her drunken husband Al (Dan Duryea), Flamarion's other assistant. Flamarion falls in love with Connie, the movie's femme fatale, and is soon manipulated by her into killing her no good husband during one of their acts.
+                ${description}
               </p>
             </div>
           </div>
     
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist"
+              name="watchlist" ${hasWatchlist ? `checked` : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
     
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" checked>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched"
+              name="watched" ${isWatched ? `checked` : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
     
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite"
+              name="favorite" ${isFavorite ? `checked` : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
@@ -97,33 +119,7 @@ const createFilmDetailsTemplate = () => {
                 <p class="film-details__user-rating-feelings">How you feel it?</p>
     
                 <div class="film-details__user-rating-score">
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1">
-                  <label class="film-details__user-rating-label" for="rating-1">1</label>
-    
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2">
-                  <label class="film-details__user-rating-label" for="rating-2">2</label>
-    
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3">
-                  <label class="film-details__user-rating-label" for="rating-3">3</label>
-    
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4">
-                  <label class="film-details__user-rating-label" for="rating-4">4</label>
-    
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5">
-                  <label class="film-details__user-rating-label" for="rating-5">5</label>
-    
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6">
-                  <label class="film-details__user-rating-label" for="rating-6">6</label>
-    
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7">
-                  <label class="film-details__user-rating-label" for="rating-7">7</label>
-    
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8">
-                  <label class="film-details__user-rating-label" for="rating-8">8</label>
-    
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9" checked>
-                  <label class="film-details__user-rating-label" for="rating-9">9</label>
-    
+                  ${personalRatingsList}
                 </div>
               </section>
             </div>
@@ -226,13 +222,13 @@ const createFilmDetailsTemplate = () => {
 };
 
 export default class FilmDetailsComponent extends AbstractSmartComponent {
-  constructor(films) {
+  constructor(film) {
     super();
-    this._films = films;
+    this._film = film;
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._films);
+    return createFilmDetailsTemplate(this._film);
   }
 
   setCloseBtnClickHandler(handler) {
