@@ -1,6 +1,6 @@
-import {renderElement} from '../utils/render';
+import {RenderPosition, renderElement, removeElement} from '../utils/render';
 import FilmCardComponent from '../components/film-card-component';
-import ShowMoreBtn from '../components/show-more-btn';
+import ShowMoreBtnComponent from '../components/show-more-btn-component';
 import FilmsListComponent from '../components/films-list-component';
 import FilmsListRatedComponent from '../components/films-list-rated-component';
 import FilmsListCommentedComponent from '../components/films-list-commented-component';
@@ -18,30 +18,56 @@ export default class FilmsController {
     this._filmsModel = filmsModel;
     this._api = api;
 
+    this._filmsListComponent = null;
+    this._filmsListRatedComponent = null;
+    this._filmsListCommentedComponent = null;
+    this._showMoreBtnComponent = new ShowMoreBtnComponent();
+
     this._showingFilmsCount = ShowingFilms.PER_PAGE;
+
+    this._onShowMoreBtnClick = this._onShowMoreBtnClick.bind(this);
   }
 
   render() {
-    const films = this._filmsModel.getFilms();
+    const filmAdapterModels = this._filmsModel.getFilms();
     renderElement(this._mainElement, this._containerComponent);
 
-    const getContainerElement = (component) => component.getElement().querySelector(`.films-list__container`);
+    this._filmsListComponent = new FilmsListComponent();
+    this._renderFilms(this._filmsListComponent, filmAdapterModels.slice(0, this._showingFilmsCount));
 
-    const filmsListComponent = new FilmsListComponent();
-    renderElement(this._container, filmsListComponent);
-    films.slice(0, this._showingFilmsCount).forEach((film) =>
-      renderElement(getContainerElement(filmsListComponent), new FilmCardComponent(film)));
+    this._renderShowMoreBtn();
 
-    renderElement(filmsListComponent.getElement(), new ShowMoreBtn());
+    this._filmsListRatedComponent = new FilmsListRatedComponent();
+    this._renderFilms(this._filmsListRatedComponent, filmAdapterModels.slice(0, ShowingFilms.EXTRA));
 
-    const filmsListRatedComponent = new FilmsListRatedComponent();
-    renderElement(this._container, filmsListRatedComponent);
-    films.slice(0, ShowingFilms.EXTRA).forEach((film) =>
-      renderElement(getContainerElement(filmsListRatedComponent), new FilmCardComponent(film)));
+    this._filmsListCommentedComponent = new FilmsListCommentedComponent();
+    this._renderFilms(this._filmsListCommentedComponent, filmAdapterModels.slice(0, ShowingFilms.EXTRA));
+  }
 
-    const filmsListCommentedComponent = new FilmsListCommentedComponent();
-    renderElement(this._container, filmsListCommentedComponent);
-    films.slice(0, ShowingFilms.EXTRA).forEach((film) =>
-      renderElement(getContainerElement(filmsListCommentedComponent), new FilmCardComponent(film)));
+  _renderFilms(containerComponent, filmAdapterModels, place = RenderPosition.BEFOREEND) {
+    renderElement(this._container, containerComponent, place);
+    filmAdapterModels.forEach((film) =>
+      renderElement(containerComponent.getElement().querySelector(`.films-list__container`), new FilmCardComponent(film)));
+  }
+
+  _renderShowMoreBtn() {
+    removeElement(this._showMoreBtnComponent);
+    if (this._showingFilmsCount >= this._filmsModel.getFilms().length) {
+      return;
+    }
+    renderElement(this._filmsListComponent.getElement(), this._showMoreBtnComponent);
+    this._showMoreBtnComponent.setClickHandler(this._onShowMoreBtnClick);
+  }
+
+  _onShowMoreBtnClick() {
+    const prevFilmsCount = this._showingFilmsCount;
+    this._showingFilmsCount += ShowingFilms.PER_PAGE;
+    const showingFilmAdapterModels = this._filmsModel.getFilms().slice(prevFilmsCount, this._showingFilmsCount);
+
+    this._renderFilms(this._filmsListComponent, showingFilmAdapterModels, RenderPosition.AFTERBEGIN);
+
+    if (this._showingFilmsCount >= this._filmsModel.getFilms().length) {
+      removeElement(this._showMoreBtnComponent);
+    }
   }
 }
