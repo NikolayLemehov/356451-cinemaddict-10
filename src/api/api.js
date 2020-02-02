@@ -1,4 +1,4 @@
-import FilmAdapterModel from '../model/filmAdapterModel';
+import FilmAdapterModel from '../model/film-adapter-model';
 
 const Method = {
   GET: `GET`,
