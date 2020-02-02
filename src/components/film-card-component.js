@@ -5,6 +5,7 @@ const createFilmCardTemplate = (film) => {
   const {filmInfo, comments} = film;
   const {title, totalRating, poster, release, runtime, genre, description} = filmInfo;
   const formattedRuntime = formatTime(runtime);
+  const genreText = genre.join(`, `);
 
   return (
     `<article class="film-card">
@@ -13,7 +14,7 @@ const createFilmCardTemplate = (film) => {
       <p class="film-card__info">
         <span class="film-card__year">${release.date.getFullYear()}</span>
         <span class="film-card__duration">${formattedRuntime}</span>
-        <span class="film-card__genre">${genre}</span>
+        <span class="film-card__genre">${genreText}</span>
       </p>
       <img src="${poster}" alt="The poster of the film '${title}'" class="film-card__poster">
       <p class="film-card__description">${description}</p>
@@ -35,5 +36,16 @@ export default class FilmCardComponent extends AbstractSmartComponent {
 
   getTemplate() {
     return createFilmCardTemplate(this._film);
+  }
+
+  setCardElementsClickHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      if (!evt.path.some((it) => it.classList.contains(`film-card__poster`)
+        || it.classList.contains(`film-card__title`)
+        || it.classList.contains(`film-card__comments`))) {
+        return;
+      }
+      handler(evt);
+    });
   }
 }

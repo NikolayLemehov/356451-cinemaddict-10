@@ -1,6 +1,8 @@
-export const createFilmDetailsTemplate = () => {
+import AbstractSmartComponent from './abstract-smart-component';
+
+const createFilmDetailsTemplate = () => {
   return (
-    `<section class="film-details" style="display: none;">
+    `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
         <div class="form-details__top-container">
           <div class="film-details__close">
@@ -222,3 +224,18 @@ export const createFilmDetailsTemplate = () => {
     </section>`
   );
 };
+
+export default class FilmDetailsComponent extends AbstractSmartComponent {
+  constructor(films) {
+    super();
+    this._films = films;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._films);
+  }
+
+  setCloseBtnClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+  }
+}
