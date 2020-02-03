@@ -1,6 +1,9 @@
+import {SortType} from '../const';
+
 export default class FilmsModel {
   constructor() {
     this._filmAdapterModels = [];
+    this._activeSortType = SortType.DEFAULT;
   }
 
   setFilms(filmAdapterModels) {
@@ -9,5 +12,14 @@ export default class FilmsModel {
 
   getFilms() {
     return this._filmAdapterModels.slice();
+  }
+
+  getSorts() {
+    return Object.values(SortType).map((sortType) => {
+      return {
+        name: sortType,
+        isChecked: sortType === this._activeSortType,
+      };
+    });
   }
 }

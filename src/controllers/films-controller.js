@@ -3,6 +3,7 @@ import ShowMoreBtnComponent from '../components/show-more-btn-component';
 import FilmsListComponent from '../components/films-list-component';
 import FilmsListRatedComponent from '../components/films-list-rated-component';
 import FilmsListCommentedComponent from '../components/films-list-commented-component';
+import SortComponent from '../components/sort-component';
 import FilmController from './film-controller';
 
 const ShowingFilms = {
@@ -22,6 +23,7 @@ export default class FilmsController {
     this._filmsListComponent = null;
     this._filmsListRatedComponent = null;
     this._filmsListCommentedComponent = null;
+    this._sortBtnComponent = new SortComponent(this._filmsModel.getSorts());
     this._showMoreBtnComponent = new ShowMoreBtnComponent();
 
     this._showingFilmsCount = ShowingFilms.PER_PAGE;
@@ -31,6 +33,7 @@ export default class FilmsController {
 
   render() {
     const filmAdapterModels = this._filmsModel.getFilms();
+    renderElement(this._mainElement, this._sortBtnComponent);
     renderElement(this._mainElement, this._containerComponent);
 
     this._renderFilms(filmAdapterModels);
