@@ -1,4 +1,5 @@
 import FilmAdapterModel from '../model/film-adapter-model';
+import CommentAdapterModel from '../model/comment-adapter-model';
 
 const Method = {
   GET: `GET`,
@@ -25,6 +26,12 @@ export default class Api {
     return this._load({url: `movies`})
       .then((response) => response.json())
       .then(FilmAdapterModel.parseFilms);
+  }
+
+  getComments(id) {
+    return this._load({url: `comments/${id}`})
+      .then((response) => response.json())
+      .then(CommentAdapterModel.parseComments);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

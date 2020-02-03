@@ -6,25 +6,30 @@ export default class FilmController {
   constructor(container) {
     this._container = container;
 
+    this._filmAdapterModel = null;
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
 
     this._onEscKeyDownFilmDetail = this._onEscKeyDownFilmDetail.bind(this);
+    this._renderFilmDetail = this._renderFilmDetail.bind(this);
     this._destroyFilmDetail = this._destroyFilmDetail.bind(this);
   }
 
   render(filmAdapterModel) {
+    this._filmAdapterModel = filmAdapterModel;
     this._filmCardComponent = new FilmCardComponent(filmAdapterModel);
     this._filmDetailsComponent = new FilmDetailsComponent(filmAdapterModel);
     renderElement(this._container, this._filmCardComponent);
 
-    this._filmCardComponent.setCardElementsClickHandler(() => {
-      document.body.classList.add(`hide-overflow`);
-      renderElement(document.body, this._filmDetailsComponent);
-      document.addEventListener(`keydown`, this._onEscKeyDownFilmDetail);
+    this._filmCardComponent.setCardElementsClickHandler(this._renderFilmDetail);
+  }
 
-      this._filmDetailsComponent.setCloseBtnClickHandler(this._destroyFilmDetail);
-    });
+  _renderFilmDetail() {
+    document.body.classList.add(`hide-overflow`);
+    renderElement(document.body, this._filmDetailsComponent);
+    document.addEventListener(`keydown`, this._onEscKeyDownFilmDetail);
+
+    this._filmDetailsComponent.setCloseBtnClickHandler(this._destroyFilmDetail);
   }
 
   _destroyFilmDetail() {

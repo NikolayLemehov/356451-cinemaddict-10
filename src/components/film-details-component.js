@@ -2,8 +2,29 @@ import moment from 'moment';
 import AbstractSmartComponent from './abstract-smart-component';
 import {formatTime} from '../utils/common';
 
+const getNormalizeDuration = (date) => {
+  const now = new Date();
+  const duration = moment.duration(now - date);
+  switch (true) {
+    case (duration.asMinutes() >= 0 && duration.asMinutes() < 1):
+      return `now`;
+    case (duration.asMinutes() >= 1 && duration.asMinutes() < 3):
+      return `a minute ago`;
+    case (duration.asMinutes() >= 3 && duration.asHours() < 1):
+      return `a few minutes ago`;
+    case (duration.asHours() >= 1 && duration.asHours() < 2):
+      return `a hour ago`;
+    case (duration.asHours() >= 2 && duration.asDays() < 1):
+      return `a few hours ago`;
+    case (duration.asDays() >= 1):
+      return `a day ago, a two days ago`;
+    default:
+      return null;
+  }
+};
+
 const personalRatings = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-const createUserRatingInput = (value, personalRating) => {
+const createUserRatingInputTemplate = (value, personalRating) => {
   return (
     `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden"
       value="${value}" id="rating-${value}" ${personalRating === value ? `checked` : ``}>
@@ -11,16 +32,37 @@ const createUserRatingInput = (value, personalRating) => {
   );
 };
 
+const createCommentTemplate = ({author, emotion, comment, date}) => {
+  const normalizeDuration = getNormalizeDuration(date);
+
+  return (
+    `<li class="film-details__comment">
+      <span class="film-details__comment-emoji">
+        <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji">
+      </span>
+      <div>
+        <p class="film-details__comment-text">${comment}</p>
+        <p class="film-details__comment-info">
+          <span class="film-details__comment-author">${author}</span>
+          <span class="film-details__comment-day">${normalizeDuration}</span>
+          <button class="film-details__comment-delete">Delete</button>
+        </p>
+      </div>
+    </li>`
+  );
+};
+
 const createFilmDetailsTemplate = (film) => {
-  const {filmInfo, userDetails} = film;
+  const {filmInfo, userDetails, comments, commentIdToComment} = film;
   const {title, originalTitle, totalRating, poster, ageRating, director, writers, actors,
     release, runtime, genres, description} = filmInfo;
   const {personalRating, hasWatchlist, isWatched, isFavorite} = userDetails;
   const releaseDate = moment(release.date).format(`DD MMMM YYYY`);
   const runtimeText = formatTime(runtime);
   const genresList = genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join(``);
-  const personalRatingsList = personalRatings.map((it) => createUserRatingInput(it, personalRating)).join(``);
-  // 30 March 1945
+  const personalRatingsList = personalRatings.map((it) => createUserRatingInputTemplate(it, personalRating)).join(``);
+  const commentsList = comments.map((id) => createCommentTemplate(commentIdToComment.get(id))).join(``);
+
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -131,58 +173,7 @@ const createFilmDetailsTemplate = (film) => {
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
     
             <ul class="film-details__comments-list">
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/smile.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Interesting setting and a good cast</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">Tim Macoveev</span>
-                    <span class="film-details__comment-day">3 days ago</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Booooooooooring</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">2 days ago</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/puke.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Very very old. Meh</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">2 days ago</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/angry.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Almost two hours? Seriously?</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">Today</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
+              ${commentsList}
             </ul>
     
             <div class="film-details__new-comment">

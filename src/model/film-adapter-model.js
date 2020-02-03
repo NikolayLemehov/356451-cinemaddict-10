@@ -26,6 +26,11 @@ export default class FilmAdapterModel {
       isFavorite: endData[`user_details`][`favorite`],
     };
     this.comments = endData[`comments`];
+    this.commentIdToComment = new Map();
+  }
+
+  replenishComments(commentIdToComment) {
+    this.commentIdToComment = commentIdToComment;
   }
 
   static parseFilm(endData) {
