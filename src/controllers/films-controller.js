@@ -82,13 +82,17 @@ export default class FilmsController {
 
     this._renderShowMoreBtn();
 
-    this._filmsListRatedComponent = new FilmsListRatedComponent();
-    this._filmControllers = this._filmControllers
-      .concat(this._renderSectionFilms(this._filmsListRatedComponent, this._sortedByRatingFilms.slice(0, ShowingFilms.EXTRA)));
+    if (this._sortedByRatingFilms.length) {
+      this._filmsListRatedComponent = new FilmsListRatedComponent();
+      this._filmControllers = this._filmControllers
+        .concat(this._renderSectionFilms(this._filmsListRatedComponent, this._sortedByRatingFilms.slice(0, ShowingFilms.EXTRA)));
+    }
 
-    this._filmsListCommentedComponent = new FilmsListCommentedComponent();
-    this._filmControllers = this._filmControllers
-      .concat(this._renderSectionFilms(this._filmsListCommentedComponent, this._sortedByCommentFilms.slice(0, ShowingFilms.EXTRA)));
+    if (this._sortedByCommentFilms.length) {
+      this._filmsListCommentedComponent = new FilmsListCommentedComponent();
+      this._filmControllers = this._filmControllers
+        .concat(this._renderSectionFilms(this._filmsListCommentedComponent, this._sortedByCommentFilms.slice(0, ShowingFilms.EXTRA)));
+    }
   }
 
   _renderSectionFilms(containerComponent, filmAdapterModels, place = RenderPosition.BEFOREEND) {
