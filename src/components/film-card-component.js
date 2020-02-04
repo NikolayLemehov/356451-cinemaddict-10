@@ -1,12 +1,15 @@
 import AbstractSmartComponent from './abstract-smart-component';
 import {formatTime} from '../utils/common';
 
+const MAX_DESCRIPTION_LENGTH = 140;
 const createFilmCardTemplate = (film) => {
   const {filmInfo, userDetails, comments} = film;
   const {title, totalRating, poster, release, runtime, genres, description} = filmInfo;
   const {hasWatchlist, isWatched, isFavorite} = userDetails;
   const formattedRuntime = formatTime(runtime);
   const genreText = genres.join(`, `);
+  const descriptionText = description.length > MAX_DESCRIPTION_LENGTH ?
+    `${description.slice(0, `${MAX_DESCRIPTION_LENGTH - 1}`)}&hellip;` : description;
 
   return (
     `<article class="film-card">
@@ -18,7 +21,7 @@ const createFilmCardTemplate = (film) => {
         <span class="film-card__genre">${genreText}</span>
       </p>
       <img src="${poster}" alt="The poster of the film '${title}'" class="film-card__poster">
-      <p class="film-card__description">${description}</p>
+      <p class="film-card__description">${descriptionText}</p>
       <a class="film-card__comments">${comments.length} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist
