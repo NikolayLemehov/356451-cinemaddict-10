@@ -24,6 +24,10 @@ export default class FilmController {
     this._filmCardComponent.setCardElementsClickHandler(this._renderFilmDetail);
   }
 
+  destroy() {
+    removeElement(this._filmCardComponent);
+  }
+
   _renderFilmDetail() {
     document.body.classList.add(`hide-overflow`);
     renderElement(document.body, this._filmDetailsComponent);

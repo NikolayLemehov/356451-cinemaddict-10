@@ -17,9 +17,17 @@ export default class FilmsModel {
   getSorts() {
     return Object.values(SortType).map((sortType) => {
       return {
-        name: sortType,
+        type: sortType,
         isChecked: sortType === this._activeSortType,
       };
     });
+  }
+
+  getSortType() {
+    return this._activeSortType;
+  }
+
+  setSortType(sortType) {
+    this._activeSortType = sortType;
   }
 }
