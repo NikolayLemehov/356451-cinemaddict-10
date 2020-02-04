@@ -22,6 +22,8 @@ export default class FilmsController {
 
     this._filmControllers = [];
     this._sortedFilms = [];
+    this._sortedByRatingFilms = [];
+    this._sortedByCommentFilms = [];
     this._filmsListComponent = null;
     this._filmsListRatedComponent = null;
     this._filmsListCommentedComponent = null;
@@ -50,18 +52,24 @@ export default class FilmsController {
 
   _renderFilms() {
     const filmAdapterModels = this._filmsModel.getFilms();
-    this._container.innerHTML = ``;
+    const diffTotalRating = (a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating;
+    const diffReleaseDate = (a, b) => b.filmInfo.release.date - a.filmInfo.release.date;
+
+    this._sortedByRatingFilms = filmAdapterModels.slice().sort((a, b) => diffTotalRating(a, b));
+    this._sortedByCommentFilms = filmAdapterModels.slice().sort((a, b) => {
+      const diffLength = b.comments.length - a.comments.length;
+      return diffLength !== 0 ? diffLength : diffTotalRating(a, b);
+    });
+
     switch (this._filmsModel.getSortType()) {
       case SortType.DEFAULT:
         this._sortedFilms = filmAdapterModels.slice();
         break;
       case SortType.DATE:
-        this._sortedFilms = filmAdapterModels.slice()
-          .sort((a, b) => (b.filmInfo.release.date - a.filmInfo.release.date));
+        this._sortedFilms = filmAdapterModels.slice().sort((a, b) => diffReleaseDate(a, b));
         break;
       case SortType.RATING:
-        this._sortedFilms = filmAdapterModels.slice()
-          .sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
+        this._sortedFilms = this._sortedByRatingFilms.slice();
         break;
     }
     this._renderSortedFilms();
@@ -76,11 +84,11 @@ export default class FilmsController {
 
     this._filmsListRatedComponent = new FilmsListRatedComponent();
     this._filmControllers = this._filmControllers
-      .concat(this._renderSectionFilms(this._filmsListRatedComponent, this._sortedFilms.slice(0, ShowingFilms.EXTRA)));
+      .concat(this._renderSectionFilms(this._filmsListRatedComponent, this._sortedByRatingFilms.slice(0, ShowingFilms.EXTRA)));
 
     this._filmsListCommentedComponent = new FilmsListCommentedComponent();
     this._filmControllers = this._filmControllers
-      .concat(this._renderSectionFilms(this._filmsListCommentedComponent, this._sortedFilms.slice(0, ShowingFilms.EXTRA)));
+      .concat(this._renderSectionFilms(this._filmsListCommentedComponent, this._sortedByCommentFilms.slice(0, ShowingFilms.EXTRA)));
   }
 
   _renderSectionFilms(containerComponent, filmAdapterModels, place = RenderPosition.BEFOREEND) {
