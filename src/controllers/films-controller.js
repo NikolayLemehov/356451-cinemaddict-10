@@ -34,8 +34,10 @@ export default class FilmsController {
 
     this._onShowMoreBtnClick = this._onShowMoreBtnClick.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onNavItemNameChange = this._onNavItemNameChange.bind(this);
 
     this._sortBtnComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._filmsModel.setNavItemNameChangeHandler(this._onNavItemNameChange);
   }
 
   render() {
@@ -51,12 +53,13 @@ export default class FilmsController {
   }
 
   _renderFilms() {
-    const filmAdapterModels = this._filmsModel.getFilms();
+    const filmAdapterModels = this._filmsModel.getFilmsByFilter();
+    const allFilmAdapterModels = this._filmsModel.getFilms();
     const diffTotalRating = (a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating;
     const diffReleaseDate = (a, b) => b.filmInfo.release.date - a.filmInfo.release.date;
 
-    this._sortedByRatingFilms = filmAdapterModels.slice().sort((a, b) => diffTotalRating(a, b));
-    this._sortedByCommentFilms = filmAdapterModels.slice().sort((a, b) => {
+    this._sortedByRatingFilms = allFilmAdapterModels.slice().sort((a, b) => diffTotalRating(a, b));
+    this._sortedByCommentFilms = allFilmAdapterModels.slice().sort((a, b) => {
       const diffLength = b.comments.length - a.comments.length;
       return diffLength !== 0 ? diffLength : diffTotalRating(a, b);
     });
@@ -69,7 +72,7 @@ export default class FilmsController {
         this._sortedFilms = filmAdapterModels.slice().sort((a, b) => diffReleaseDate(a, b));
         break;
       case SortType.RATING:
-        this._sortedFilms = this._sortedByRatingFilms.slice();
+        this._sortedFilms = filmAdapterModels.slice().sort((a, b) => diffTotalRating(a, b));
         break;
     }
     this._renderSortedFilms();
@@ -137,5 +140,9 @@ export default class FilmsController {
     if (this._showingFilmsCount >= this._sortedFilms.length) {
       removeElement(this._showMoreBtnComponent);
     }
+  }
+
+  _onNavItemNameChange() {
+    this._updateFilms();
   }
 }

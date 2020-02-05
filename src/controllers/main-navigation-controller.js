@@ -1,6 +1,5 @@
 import MainNavigationComponent from '../components/main-navigation-component';
 import {renderElement, replaceElement} from '../utils/render';
-import {mainNav} from '../mock/main-nav';
 
 export default class MainNavigationController {
   constructor(container, filmsModel) {
@@ -9,16 +8,18 @@ export default class MainNavigationController {
 
     this._mainNavigationComponent = null;
 
-    // this._onDataChange = this._onDataChange.bind(this);
-    // this._onMenuItemChange = this._onMenuItemChange.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onNavItemChange = this._onNavItemChange.bind(this);
+
+    this._filmsModel.setNavItemNameChangeHandler(this._onDataChange);
   }
 
   render() {
-    const menuItems = mainNav;
+    const menuItems = this._filmsModel.getNavItems();
     const oldComponent = this._mainNavigationComponent;
 
     this._mainNavigationComponent = new MainNavigationComponent(menuItems);
-    // this._mainNavigationComponent.setMenuItemChangeHandler(this._onMenuItemChange);
+    this._mainNavigationComponent.setNavItemChangeHandler(this._onNavItemChange);
     if (oldComponent) {
       replaceElement(this._mainNavigationComponent, oldComponent);
     } else {
@@ -26,11 +27,11 @@ export default class MainNavigationController {
     }
   }
 
-  // _onMenuItemChange(menuItemName) {
-  //   this._filmsModel.setMenuItemName(menuItemName);
-  // }
+  _onNavItemChange(navItemName) {
+    this._filmsModel.setNavItemName(navItemName);
+  }
 
-  // _onDataChange() {
-  //   this.render();
-  // }
+  _onDataChange() {
+    this.render();
+  }
 }

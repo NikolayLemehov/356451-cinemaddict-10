@@ -1,18 +1,18 @@
 import AbstractSmartComponent from './abstract-smart-component';
 
-const createItemMenuTemplate = (itemMenu) => {
-  const {url, text, isActive, isCounted, count, isAdditional} = itemMenu;
-  const activity = isActive ? `main-navigation__item--active` : ``;
+const createItemMenuTemplate = ({name, text, isActive, isCounted, count, isAdditional}) => {
   const enumeration = isCounted ? ` <span class="main-navigation__item-count">${count}</span>` : ``;
-  const addition = isAdditional ? `main-navigation__item--additional` : ``;
 
   return (
-    `<a href="#${url}" class="main-navigation__item ${activity} ${addition}">${text}${enumeration}</a>`
+    `<a href="#${name}" class="main-navigation__item
+      ${isActive ? ` main-navigation__item--active` : ``}
+      ${isAdditional ? ` main-navigation__item--additional` : ``}"
+      data-type="${name}">${text}${enumeration}</a>`
   );
 };
 
-const createMainNavTemplate = (mainNav) => {
-  const menuItemsElement = mainNav.map((item) => createItemMenuTemplate(item)).join(``);
+const createMainNavTemplate = (navItems) => {
+  const menuItemsElement = navItems.map((item) => createItemMenuTemplate(item)).join(``);
 
   return (
     `<nav class="main-navigation">
@@ -23,12 +23,25 @@ const createMainNavTemplate = (mainNav) => {
 
 
 export default class MainNavigationComponent extends AbstractSmartComponent {
-  constructor(mainNav) {
+  constructor(navItems) {
     super();
-    this._mainNav = mainNav;
+    this._navItems = navItems;
   }
 
   getTemplate() {
-    return createMainNavTemplate(this._mainNav);
+    return createMainNavTemplate(this._navItems);
+  }
+
+  setNavItemChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      if (evt.target.tagName !== `A` || evt.target.classList.contains(`main-navigation__item--active`)) {
+        return;
+      }
+      if (evt.target.classList.contains(`main-navigation__item--additional`)) {
+        // console.log(`diagrams stats`);
+      }
+      const menuItemName = evt.target.dataset.type;
+      handler(menuItemName);
+    });
   }
 }
