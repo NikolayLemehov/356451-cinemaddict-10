@@ -4,6 +4,7 @@ import FilmsListComponent from '../components/films-list-component';
 import FilmsListRatedComponent from '../components/films-list-rated-component';
 import FilmsListCommentedComponent from '../components/films-list-commented-component';
 import SortComponent from '../components/sort-component';
+import HeaderProfileComponent from '../components/header-profile-component';
 import FilmController from './film-controller';
 import {SortType} from '../const';
 
@@ -29,6 +30,8 @@ export default class FilmsController {
     this._filmsListCommentedComponent = null;
     this._sortBtnComponent = new SortComponent(this._filmsModel.getSorts());
     this._showMoreBtnComponent = new ShowMoreBtnComponent();
+    this._headerElement = document.querySelector(`.header`);
+    this._headerProfileComponent = null;
 
     this._showingFilmsCount = ShowingFilms.PER_PAGE;
 
@@ -43,6 +46,8 @@ export default class FilmsController {
   render() {
     renderElement(this._mainElement, this._sortBtnComponent);
     renderElement(this._mainElement, this._containerComponent);
+    this._headerProfileComponent = new HeaderProfileComponent(this._filmsModel.getFilms());
+    renderElement(this._headerElement, this._headerProfileComponent);
 
     this._renderFilms();
   }
@@ -117,6 +122,7 @@ export default class FilmsController {
 
   _updateFilms() {
     this._removeFilmsControllers();
+    this._headerProfileComponent.rerender(this._filmsModel.getFilms());
     this._renderFilms();
   }
 
